@@ -22,11 +22,13 @@ def read_file(file_name):
     return sents
 
 p = Preprocess(word2index_dic='../../train_tools/dict/chatbot_dict.bin',
-               userdic='../../utils/user_dic.tsv')
+               #userdic='../../utils/user_dic.tsv')
+               userdic='../../utils/mtn_user_dict.tsv')
 
 # 학습용 말뭉치 데이터를 불러옴
 #corpus = read_file('ner_train.txt')
-corpus = read_file('mtn_ner_train.txt')
+corpus = read_file('mtn_ner_train_fullversion.txt')
+print(corpus[0])
 
 
 # 말뭉치 데이터에서 단어와 BIO 태그만 불러와 학습용 데이터셋 생성
@@ -65,6 +67,7 @@ y_train = tag_tokenizer.texts_to_sequences(tags)
 
 index_to_ner = tag_tokenizer.index_word # 시퀀스 인덱스를 NER로 변환 하기 위해 사용
 index_to_ner[0] = 'PAD'
+print('index_to_ner', index_to_ner)
 
 # 시퀀스 패딩 처리
 max_len = 40
@@ -99,7 +102,7 @@ model.compile(loss='categorical_crossentropy', optimizer=Adam(0.01), metrics=['a
 model.fit(x_train, y_train, batch_size=128, epochs=1)
 
 print("평가 결과 : ", model.evaluate(x_test, y_test)[1])
-model.save('ner_model_use_cpsdic_usrdic_mtndat.h5')
+model.save('ner_model_use_cpsdic_mtndic_mtndat.h5')
 
 
 # 시퀀스를 NER 태그로 변환

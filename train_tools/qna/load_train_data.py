@@ -1,6 +1,9 @@
 import pymysql
 import openpyxl
 
+import sys
+sys.path.insert(0, '../../')
+
 from config.DatabaseConfig import * # DB 접속 정보 불러오기
 
 
@@ -41,7 +44,8 @@ def insert_data(db, xls_row):
         db.commit()
 
 
-train_file = './train_data.xlsx'
+#train_file = './train_data.xlsx'
+train_file = './mtn_train_data.xlsx'
 db = None
 try:
     db = pymysql.connect(

@@ -1,0 +1,17 @@
+1. intent
+
+2. ner
+ㅇ 학습자료 처리과정
+    - 사전 정의
+	사용자정의 사전으로, 형태소 분리, 불용어 제거없이 word_index 생성
+	불용어 제거 없이해야 나중에 처리가능
+    - 입력
+	[p.get_wordidx_sequence(sent) for sent in sentences]
+	미리 정의된 사전으로, 단어별로 라벨인덱싱, 사전에 없는건 OOV 인덱스값 처리
+	불용어 처리 안함
+    - 레이블
+	BIO 태그 - tag_tokenizer.texts_to_sequences(tags)
+
+ㅇ 테스트 처리과정
+    - 입력
+	형태소 분리, 불용어 처리, 패딩, 예측, index_to_ner

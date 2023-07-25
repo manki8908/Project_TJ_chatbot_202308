@@ -39,8 +39,8 @@ class Preprocess:
         f = lambda x: x in self.exclusion_tags
         word_list = []
         for p in pos:
-            if f(p[1]) is False:
-                word_list.append(p if without_tag is False else p[0])
+            if f(p[1]) is False: # 불용어 제거 필터링 for 문
+                word_list.append(p if without_tag is False else p[0])  # tag 출력여부 조건문
         return word_list
 
     # 키워드를 단어 인덱스 시퀀스로 변환

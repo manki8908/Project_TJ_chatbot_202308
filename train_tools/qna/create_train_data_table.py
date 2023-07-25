@@ -1,4 +1,7 @@
 import pymysql
+import sys
+
+sys.path.insert(0, '../../')
 from config.DatabaseConfig import * # DB 접속 정보 불러오기
 
 db = None
