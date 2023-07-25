@@ -2,8 +2,8 @@ import socket
 
 class BotServer:
     def __init__(self, srv_port, listen_num):
-        self.port = srv_port
-        self.listen = listen_num
+        self.port = srv_port  # 소켓서버 포트
+        self.listen = listen_num  # 수락할 클라이언트 수
         self.mySock = None
 
     # sock 생성
