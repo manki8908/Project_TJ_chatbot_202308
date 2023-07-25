@@ -4,17 +4,24 @@ import tensorflow as tf
 from tensorflow.keras import preprocessing
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, concatenate
+import sys
 
+
+sys.path.insert(0, '../../')
+from utils.Preprocess import Preprocess
+from config.GlobalParams import MAX_SEQ_LEN
 
 # 데이터 읽어오기
-train_file = "total_train_data.csv"
+#train_file = "total_train_data.csv"
+train_file = "mtn_train_data.csv"
 data = pd.read_csv(train_file, delimiter=',')
 queries = data['query'].tolist()
 intents = data['intent'].tolist()
 
-from utils.Preprocess import Preprocess
+
 p = Preprocess(word2index_dic='../../train_tools/dict/chatbot_dict.bin',
-               userdic='../../utils/user_dic.tsv')
+               #userdic='../../utils/user_dic.tsv')
+                userdic='../../utils/mtn_user_dict.tsv')
 
 # 단어 시퀀스 생성
 sequences = []
@@ -27,7 +34,6 @@ for sentence in queries:
 
 # 단어 인덱스 시퀀스 벡터 ○2
 # 단어 시퀀스 벡터 크기
-from config.GlobalParams import MAX_SEQ_LEN
 padded_seqs = preprocessing.sequence.pad_sequences(sequences, maxlen=MAX_SEQ_LEN, padding='post')
 
 # (105658, 15)
@@ -107,4 +113,4 @@ print('loss: %f' % (loss))
 
 
 # 모델 저장  ○8
-model.save('intent_model.h5')
+model.save('intent_model_use_mtndat_mtndic.h5')
