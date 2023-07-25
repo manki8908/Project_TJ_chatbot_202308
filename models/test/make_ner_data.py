@@ -8,7 +8,7 @@ sent_file = '주문조합.csv'
 
 komoran = Komoran(userdic='../../utils/user_dic.tsv')
 
-file = open("output_ner_train.txt", 'w')
+file = open("output_ner_train.txt", 'w', encoding='utf8')
 with open(date_file, mode='r', encoding='utf-8-sig') as df:
     dr = csv.reader(df)
     for k, r in enumerate(dr):
@@ -57,9 +57,9 @@ with open(date_file, mode='r', encoding='utf-8-sig') as df:
                         else:
                             line += "{}\t{}\t{}\t{}\n".format(i + 1, s[0], s[2], s[1])
 
-                    print(raw_q)
-                    print(res_q)
-                    print(line)
+                    #print(raw_q)
+                    #print(res_q)
+                    #print(line)
                     file.write(raw_q + "\n")
                     file.write(res_q + "\n")
                     file.write(line + "\n")

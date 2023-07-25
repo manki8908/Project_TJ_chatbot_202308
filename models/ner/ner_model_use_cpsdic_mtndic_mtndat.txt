@@ -1,0 +1,51 @@
+샘플 크기 : 
+ 65512
+0번 째 샘플 단어 시퀀스 : 
+ ['가락지빵', '주문', '하', '고', '싶', '어요']
+0번 째 샘플 bio 태그 : 
+ ['B_FOOD', 'O', 'O', 'O', 'O', 'O']
+샘플 단어 시퀀스 최대 길이 : 168
+샘플 단어 시퀀스 평균 길이 : 8.431951398217121
+BIO 태그 사전 크기 : 10
+단어 사전 크기 : 17869
+index_to_ner {1: 'O', 2: 'B_DT', 3: 'B_FOOD', 4: 'B_LC', 5: 'I', 6: 'B_OG', 7: 'B_PS', 8: 'NNP', 9: 'B_TI', 0: 'PAD'}
+학습 샘플 시퀀스 형상 :  (52409, 40)
+학습 샘플 레이블 형상 :  (52409, 40, 10)
+테스트 샘플 시퀀스 형상 :  (13103, 40)
+테스트 샘플 레이블 형상 :  (13103, 40, 10)
+410/410 [==============================] - 149s 351ms/step - loss: 0.1210 - accuracy: 0.9672
+410/410 [==============================] - 15s 34ms/step - loss: 0.0508 - accuracy: 0.9832
+평가 결과 :  0.9831815361976624
+410/410 [==============================] - 14s 32ms/step
+c:\Python38\lib\site-packages\seqeval\metrics\sequence_labeling.py:171: UserWarning: B_DT seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+c:\Python38\lib\site-packages\seqeval\metrics\sequence_labeling.py:171: UserWarning: B_FOOD seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+c:\Python38\lib\site-packages\seqeval\metrics\sequence_labeling.py:171: UserWarning: B_LC seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+c:\Python38\lib\site-packages\seqeval\metrics\sequence_labeling.py:171: UserWarning: B_PS seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+c:\Python38\lib\site-packages\seqeval\metrics\sequence_labeling.py:171: UserWarning: B_TI seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+c:\Python38\lib\site-packages\seqeval\metrics\sequence_labeling.py:171: UserWarning: B_OG seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+c:\Python38\lib\site-packages\seqeval\metrics\sequence_labeling.py:171: UserWarning: NNP seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+c:\Python38\lib\site-packages\seqeval\metrics\v1.py:57: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+              precision    recall  f1-score   support
+
+          NP       1.00      1.00      1.00       297
+           _       0.45      0.38      0.41       640
+         _DT       0.99      0.99      0.99     13466
+       _FOOD       1.00      1.00      1.00     11685
+         _LC       0.94      0.88      0.91      1747
+         _OG       0.46      0.40      0.43       464
+         _PS       0.64      0.04      0.08       396
+         _TI       0.00      0.00      0.00        65
+
+   micro avg       0.97      0.95      0.96     28760
+   macro avg       0.69      0.59      0.60     28760
+weighted avg       0.97      0.95      0.95     28760
+
+F1-score: 96.3%

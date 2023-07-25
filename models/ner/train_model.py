@@ -25,7 +25,9 @@ p = Preprocess(word2index_dic='../../train_tools/dict/chatbot_dict.bin',
                userdic='../../utils/user_dic.tsv')
 
 # 학습용 말뭉치 데이터를 불러옴
-corpus = read_file('ner_train.txt')
+#corpus = read_file('ner_train.txt')
+corpus = read_file('mtn_ner_train.txt')
+
 
 # 말뭉치 데이터에서 단어와 BIO 태그만 불러와 학습용 데이터셋 생성
 sentences, tags = [], []
@@ -94,10 +96,10 @@ model.add(Embedding(input_dim=vocab_size, output_dim=30, input_length=max_len, m
 model.add(Bidirectional(LSTM(200, return_sequences=True, dropout=0.50, recurrent_dropout=0.25)))
 model.add(TimeDistributed(Dense(tag_size, activation='softmax')))
 model.compile(loss='categorical_crossentropy', optimizer=Adam(0.01), metrics=['accuracy'])
-model.fit(x_train, y_train, batch_size=128, epochs=10)
+model.fit(x_train, y_train, batch_size=128, epochs=1)
 
 print("평가 결과 : ", model.evaluate(x_test, y_test)[1])
-model.save('ner_model.h5')
+model.save('ner_model_use_cpsdic_usrdic_mtndat.h5')
 
 
 # 시퀀스를 NER 태그로 변환
