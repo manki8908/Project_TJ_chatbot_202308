@@ -20,3 +20,6 @@ variable_info = {
     "TMP_surface": ["surface Temperature", "K"],
     "PRES_surface": ["Surface Pressure", "Pa"]
 }
+
+def global_params():
+    global variable_info
