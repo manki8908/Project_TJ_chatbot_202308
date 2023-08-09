@@ -1,0 +1,24 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module read_namelistf90 ! in 
+    interface  ! in :read_namelistf90
+        subroutine read_namelist(infile,tran_data_per,test_data_per,tran_num_his,test_num_his,num_fct,num_layers,hidden_size,learning_rate,num_epoch,stn_id,patience) ! in :read_namelistf90:read_namelist.f90
+            character*200 intent(in) :: infile
+            character*200 intent(out) :: tran_data_per
+            character*200 intent(out) :: test_data_per
+            integer intent(out) :: tran_num_his
+            integer intent(out) :: test_num_his
+            integer intent(out) :: num_fct
+            integer intent(out) :: num_layers
+            integer intent(out) :: hidden_size
+            real intent(out) :: learning_rate
+            integer intent(out) :: num_epoch
+            integer intent(out) :: stn_id
+            real intent(out) :: patience
+        end subroutine read_namelist
+    end interface 
+end python module read_namelistf90
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

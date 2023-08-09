@@ -1,0 +1,19 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module read_plus_datef90 ! in 
+    interface  ! in :read_plus_datef90
+        subroutine read_binary(infile,nv,ns,nh,nf,buf,ndate1) ! in :read_plus_datef90:read_plus_date.f90
+            character*(*) intent(in) :: infile
+            integer intent(in) :: nv
+            integer intent(in) :: ns
+            integer intent(in) :: nh
+            integer intent(in) :: nf
+            real dimension(nv,ns,nh,nf),intent(out),depend(nv,ns,nh,nf) :: buf
+            integer dimension(nh,4),intent(out),depend(nh) :: ndate1
+        end subroutine read_binary
+    end interface 
+end python module read_plus_datef90
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

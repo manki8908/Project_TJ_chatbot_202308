@@ -156,10 +156,12 @@ name_list = "./SHEL/namelist.input"
 hp_lr = 0.009
 hp_pd = 'same'
 hp_ns = 1
-hp_dl = [1,2,4,8,16,32,48]
+#hp_dl = [1,2,4,8,16,32,48]
+hp_dl = [1,2,4,8,16]
+#hp_dl = [1,2,4]
 hp_ldl = hp_dl[-1] # last dilation factor to make name of save model
 hp_bn = True
-hp_nf = 80
+hp_nf = 50
 hp_dr = 0.07
 hp_ks = 6
 
@@ -167,10 +169,10 @@ input_size = 6
 output_size = 2
 num_fct = 48
 batch_size = 8
-n_iter_search = 20
 num_epoch = 1000
 dev_stn_id = 47105
 tran_data_per = "2101_2104_2201_2204"
+
 
 exp_name = "CNTL"
 csv_outdir = './DAOU/LOSS/' + exp_name + '/'
@@ -178,6 +180,7 @@ model_outdir = './DAOU/MODL/' + exp_name + '/'
 scalr_outdir = './DAOU/SCAL/' + exp_name + '/'
 gifd_outdir = './GIFD/' + exp_name + '/'
 log_outdir = './DAOU/LOGF/' + exp_name + '/'
+mplot_outdir = './GIFD/' + exp_name + '/'
 
 
 if os.path.exists(csv_outdir) != True: os.makedirs(csv_outdir)
@@ -185,6 +188,25 @@ if os.path.exists(model_outdir) != True: os.makedirs(model_outdir)
 if os.path.exists(scalr_outdir) != True: os.makedirs(scalr_outdir)
 if os.path.exists(gifd_outdir) != True: os.makedirs(gifd_outdir)
 if os.path.exists(log_outdir) != True: os.makedirs(log_outdir)
+
+
+#-------------------------------------------------------------------------
+# .. Set model label
+
+make_option = '_e' + str(num_epoch) + '_bs' + str(batch_size) + '_lr' + str(hp_lr) + \
+              '_nf' + str(hp_nf) + '_pd' + hp_pd + '_ks' + str(hp_ks) + '_dr'+str(hp_dr) + \
+              '_dl' + str(hp_ldl) + '_ns' + str(hp_ns) 
+model_name = 'tcn_modl_' + 'var' + str(input_size) + make_option + \
+             '_' + tran_data_per + '_' + str(dev_stn_id) + '.h5'
+loss_name = 'loss_' + 'var' + str(input_size) + make_option + \
+             '_' + tran_data_per + '_' + str(dev_stn_id)
+scalr_name = 'sclr_' + 'var' + str(input_size) + make_option + \
+             '_' + tran_data_per + '_' + str(dev_stn_id) + '.pkl'
+log_name = 'log_' + 'var' + str(input_size) + make_option + \
+             '_' + tran_data_per + '_' + str(dev_stn_id) + '.csv'
+modelplot_name = 'mplt_' + 'var' + str(input_size) + make_option + \
+             '_' + tran_data_per + '_' + str(dev_stn_id) + '.png'
+
 
 #-------------------------------------------------------------------------
 # .. Set Model
@@ -206,7 +228,7 @@ if gpus:
     
 
 # .. Set batch for whole data
-batch_size = 8
+
 
 # .. create model - API
 i = Input( batch_shape=(None, num_fct, input_size) ) 
@@ -229,27 +251,7 @@ m.compile(optimizer=adam, loss='mse')
 
 #tcn_full_summary(m, expand_residual_blocks=True)
 m.summary()
-plm(m, to_file='./GIFD/tcn_exp.png', show_shapes=True)
-
-
-#=========================================================================
-# .. Save model
-
-
-#-------------------------------------------------------------------------
-# .. Set model label
-
-make_option = '_e' + str(num_epoch) + '_bs' + str(batch_size) + '_lr' + str(hp_lr) + \
-              '_nf' + str(hp_nf) + '_pd' + hp_pd + '_ks' + str(hp_ks) + '_dr'+str(hp_dr) + \
-              '_dl' + str(hp_ldl) + '_ns' + str(hp_ns) 
-model_name = 'tcn_modl_' + 'var' + str(input_size) + make_option + \
-             '_' + tran_data_per + '_' + str(dev_stn_id) + '.h5'
-loss_name = 'loss_' + 'var' + str(input_size) + make_option + \
-             '_' + tran_data_per + '_' + str(dev_stn_id)
-scalr_name = 'sclr_' + 'var' + str(input_size) + make_option + \
-             '_' + tran_data_per + '_' + str(dev_stn_id) + '.pkl'
-log_name = 'log_' + 'var' + str(input_size) + make_option + \
-             '_' + tran_data_per + '_' + str(dev_stn_id) + '.csv'
+plm(m, to_file=mplot_outdir + modelplot_name, show_shapes=True)
 
 
 
@@ -257,8 +259,6 @@ log_name = 'log_' + 'var' + str(input_size) + make_option + \
 # .. save scaler
 joblib.dump(nwp_scaler, scalr_outdir + 'nwp_' + scalr_name)
 joblib.dump(obs_scaler, scalr_outdir + 'obs_' + scalr_name)
-
-
 
 
 
