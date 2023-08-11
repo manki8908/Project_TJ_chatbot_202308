@@ -1,10 +1,13 @@
 import numpy as np
 import pandas as pd
-from data_split import data_split
-
 import sys
-sys.path.insert(0, '../')
-from config.global_params import variable_info
+
+sys.path.insert(0, '../config/')
+from global_params import variable_info
+#from config.global_params import variable_info
+
+sys.path.insert(0, './INC/')
+from data_split import data_split
 
 
 # 인풋 준비
@@ -157,13 +160,13 @@ hp_lr = 0.009
 hp_pd = 'same'
 hp_ns = 1
 #hp_dl = [1,2,4,8,16,32,48]
-hp_dl = [1,2,4,8,16]
-#hp_dl = [1,2,4]
+#hp_dl = [1,2,4,8,16]
+hp_dl = [1,2,4]
 hp_ldl = hp_dl[-1] # last dilation factor to make name of save model
 hp_bn = True
-hp_nf = 50
+hp_nf = 95
 hp_dr = 0.07
-hp_ks = 6
+hp_ks = 3
 
 input_size = 6
 output_size = 2
