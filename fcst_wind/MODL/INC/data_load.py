@@ -28,12 +28,19 @@ def data_load(nwp_file, obs_file):
     print(test_obs.shape)
 
 
+    # # 결측 가시화
+    # import missingno as msno
+    # import matplotlib.pyplot as plt
+    # msno.matrix(df)
+
+
 
     # 결측제거
     missing_nwp_train = set(np.where(np.isnan(train_nwp))[0])
     missing_obs_train = set(np.where(np.isnan(train_obs))[0])
     missing_all_train = list(missing_nwp_train | missing_obs_train)
     print("결측 합계: ", len(missing_all_train))
+    print("결측 index=", missing_all_train)
     dm_nwp_train = np.delete(train_nwp, missing_all_train, 0)
     dm_obs_train = np.delete(train_obs, missing_all_train, 0)
     print("shape of after drop")
@@ -44,6 +51,13 @@ def data_load(nwp_file, obs_file):
     missing_obs_test = set(np.where(np.isnan(test_obs))[0])
     missing_all_test = list(missing_nwp_test | missing_obs_test)
     print("결측 합계: ", len(missing_all_test))
+    print("결측 index=", missing_all_test)
+
+    print("test_nwp missing")
+    print(test_nwp[missing_all_test,:,0])
+    print("test_obs missing")
+    print(test_obs[missing_all_test,:,0])
+    
     dm_nwp_test = np.delete(test_nwp, missing_all_test, 0)
     dm_obs_test = np.delete(test_obs, missing_all_test, 0)
     print("shape of after drop")

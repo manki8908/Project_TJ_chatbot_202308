@@ -121,16 +121,18 @@ print ('test obs : ', nor_dm_obs_test.shape)
 
 
 
-
-from tensorflow.compat.v1.keras.backend import set_session
 import tensorflow as tf
+from tensorflow.compat.v1.keras.backend import set_session
 from tensorflow.keras import backend as K
 from tensorflow.keras import optimizers
-
-
 from tensorflow.keras.utils import plot_model as plm
-from tcn import TCN, tcn_full_summary
 from tensorflow.keras.activations import swish
+from tensorflow.keras.layers import Dense, TimeDistributed
+from tensorflow.keras import Input, Model, callbacks
+from tensorflow.keras import metrics
+
+from tcn import TCN, tcn_full_summary
+
 
 import os
 import joblib
@@ -138,8 +140,6 @@ import joblib
 #import keras
 #from keras.wrappers.scikit_learn import KerasRegressor
 #from tensorflow.keras.models import model_from_json
-from tensorflow.keras.layers import Dense, TimeDistributed
-from tensorflow.keras import Input, Model, callbacks
 from keras.callbacks import CSVLogger
 
 #-------------------------------------------------------------------------
@@ -164,7 +164,7 @@ hp_ns = 1
 hp_dl = [1,2,4]
 hp_ldl = hp_dl[-1] # last dilation factor to make name of save model
 hp_bn = True
-hp_nf = 95
+hp_nf = 85
 hp_dr = 0.07
 hp_ks = 3
 
@@ -230,6 +230,12 @@ if gpus:
         print(e)
     
 
+#-------------------------------------------------------------------------
+# .. Set custom metrics
+def me(y_true, y_pred):
+    return K.mean((y_pred - y_true), axis=-1)
+
+
 # .. Set batch for whole data
 
 
@@ -250,7 +256,9 @@ o = TimeDistributed(Dense(output_size, activation='linear'))(o)
 
 adam = optimizers.Adam(learning_rate=hp_lr)
 m= Model(inputs=[i], outputs=[o])
-m.compile(optimizer=adam, loss='mse')
+#m.compile(optimizer=adam, loss='mse')
+m.compile(optimizer=adam, loss='mse', metrics=[metrics.RootMeanSquaredError(name="root_mean_squared_error"),
+                                               metrics.CosineSimilarity(name="cosine_similarity")])
 
 #tcn_full_summary(m, expand_residual_blocks=True)
 m.summary()
