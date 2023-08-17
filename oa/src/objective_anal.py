@@ -150,9 +150,7 @@ class fastbarnes_run_1ele():
         field = interpolation.barnes(lon_lat_data, qff_values, sigma, x0, step, size)
         #print(type(field))
         #print(np.round(field, 2))
-        print("=== field out")
-        print(field.shape)
-        print(np.min(field), np.max(field))
+
         
 
         # .. draw graphic with labeled contours and scattered sample points
@@ -169,5 +167,11 @@ class fastbarnes_run_1ele():
         #plt.scatter(lon_lat_data[:, 0], lon_lat_data[:, 1], color='red', s=1, marker='.')
         #
         #plt.show()
+
+        print("=== field out")
+        print("field shape: ", field.shape)
+        print("gridX shape: ", gridX.shape)
+        print("gridY shape: ", gridY.shape)
+        print(np.min(field), np.max(field))
 
         return field, gridX, gridY
