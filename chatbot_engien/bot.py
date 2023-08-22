@@ -68,7 +68,8 @@ def to_client(conn, addr, params):
             "Answer": answer,
             "AnswerImageUrl" : answer_image,
             "Intent": intent_name,
-            "NER": str(ner_predicts)
+            "NER Predicts": str(ner_predicts),
+            "NER tags": str(ner_tags)
         }
         message = json.dumps(send_json_data_str)
         conn.send(message.encode())

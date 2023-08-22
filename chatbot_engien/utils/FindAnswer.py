@@ -26,8 +26,9 @@ class FindAnswer:
         # 의도명, 개체명으로 답변 검색
         sql = self._make_query(intent_name, ner_tags)
         answer = self.db.select_one(sql)
-        #print("==========생성 쿼리:")
-        #print(sql)
+        print("FindAnswer search 결과:")
+        print("sql query: ", sql)
+        print("answer: ", answer)
 
         # 검색되는 답변이 없으면 의도명만 검색
         if answer is None:
@@ -38,11 +39,16 @@ class FindAnswer:
 
     # NER 태그를 실제 입력된 단어로 변환
     def tag_to_word(self, ner_predicts, answer):
-        for word, tag in ner_predicts:
-
+        # in answer = {B_LC1} {B_LC2} 를 등산로 DB 
+        #for word, tag in ner_predicts:
+        for i, (word, tag) in enumerate(ner_predicts):
+            print("tag_to_word in ner ", ner_predicts)
+            print("word", word)
             # 변환해야하는 태그가 있는 경우 추가
+
             if tag=='B_FOOD' or tag=='B_DT' or tag=='B_TI' or tag=='B_LC':
-                answer = answer.replace(tag, word)
+                answer = answer.replace(tag+str(i+1), word)
+                print('answer in if', answer)
 
         answer = answer.replace('{', '')
         answer = answer.replace('}', '')

@@ -11,7 +11,7 @@ class IntentModel:
         self.labels = {0: "인사", 1: "욕설", 2: "조회", 3: "선택", 4: "기타"}
 
         # 의도 분류 모델 불러오기
-        self.model = load_model(model_name)
+        self.model = load_model(model_name, compile=False)
 
         # 챗봇 Preprocess 객체
         self.p = proprocess
