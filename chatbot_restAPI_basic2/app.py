@@ -3,8 +3,8 @@ import socket
 import json
 
 # 챗봇 엔진 서버 접속 정보
-host = "127.0.0.1"  # 챗봇 엔진 서버 IP 주소
-port = 5050  # 챗봇 엔진 서버 통신 포트
+host = "127.0.0.1"  # 챗봇 엔진 서버 IP 주소(챗본 엔진이 구동된 서버의 IP(DB host 아님))
+port = 5050  # 챗봇 엔진 서버 통신 포트 (bot.py에 설정되어 있음)
 
 # Flask 어플리케이션
 app = Flask(__name__)
@@ -66,6 +66,5 @@ def query(bot_type):
         abort(500)
 
 
-if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=5000)
-    app.run(debug=True)
+if __name__ == '__main__':  
+    app.run(debug=True)   # 기본설정 host='127.0.0.1', port=5000

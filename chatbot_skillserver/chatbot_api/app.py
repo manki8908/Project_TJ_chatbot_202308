@@ -3,8 +3,8 @@ import socket
 import json
 
 # 챗봇 엔진 서버 접속 정보
-host = "127.0.0.1"  # 챗봇 엔진 서버 IP 주소
-port = 5050  # 챗봇 엔진 서버 통신 포트
+host = "127.0.0.1"  # 챗봇 엔진 서버 IP 주소(챗본 엔진이 구동된 서버의 IP(DB host 아님))
+port = 5050  # 챗봇 엔진 서버 통신 포트 (bot.py에 설정되어 있음)
 
 # Flask 어플리케이션
 app = Flask(__name__)
@@ -46,7 +46,7 @@ def query(bot_type):
 
     try:
         if bot_type == 'TEST':
-            # 챗봇 API 테스트
+            # 챗봇 API 테스트, 크롬 확장어플
             ret = get_answer_from_engine(bottype=bot_type, query=body['query'])
             return jsonify(ret)
 
