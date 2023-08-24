@@ -8,7 +8,13 @@ from utils.Preprocess import Preprocess
 from models.intent.IntentModel import IntentModel
 from models.ner.NerModel import NerModel
 from utils.FindAnswer import FindAnswer
+from models.mtn_load.plot_load import find_load
 
+
+# 등산로 로드
+
+geo_path = '../DATA/FRT000801/moutain_load.geojson'
+search_class = find_load(geo_path)
 
 # 전처리 객체 생성
 p = Preprocess(word2index_dic='train_tools/dict/chatbot_dict.bin',
@@ -55,9 +61,14 @@ def to_client(conn, addr, params):
 
         # 답변 검색
         try:
+            # 답변 검색
             f = FindAnswer(db)
             answer_text, answer_image = f.search(intent_name, ner_tags)
             answer = f.tag_to_word(ner_predicts, answer_text)
+
+            # 등산로 이미지 생성
+            latlon_load = search_class.get_latlon(query)
+            search_class.plot_load(latlon_load)
 
         except:
             answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부 할게요."

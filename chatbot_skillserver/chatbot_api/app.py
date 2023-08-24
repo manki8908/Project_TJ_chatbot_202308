@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify, abort, render_template
 import socket
 import json
 
@@ -37,6 +37,11 @@ def get_answer_from_engine(bottype, query):
 @app.route('/', methods=['GET'])
 def index():
     return 'hello', 200
+
+# 챗봇 엔진 query 전송 API
+@app.route('/load_map', methods=['POST'])
+def load_map(bot_type):    
+    return render_template('../../../../chatbot_engien/models/mtn_load/map_out.html')
 
 
 # 챗봇 엔진 query 전송 API
