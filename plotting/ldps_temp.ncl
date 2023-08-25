@@ -60,18 +60,13 @@ fname = "l015_v070_erlo_unis_20kind.2023041000.nc"
 f     = addfile (in_dir + fname, "r")
 print(f)
 
-uuu2d = f->UGRD_10maboveground(0,:,:)
-vvv2d = f->VGRD_10maboveground(0,:,:)
-wsp2d = wind_speed(uuu2d,vvv2d)
+tmp2d = f->TMP_1_5maboveground(0,:,:)
 lat2d = f->latitude     ; Needed only for projection information
 lon2d = f->longitude
 
-printVarSummary(uuu2d)
-printVarSummary(vvv2d)
-printVarSummary(wsp2d)
+printVarSummary(tmp2d)
 printVarSummary(lat2d)
 printVarSummary(lon2d)
-
 
 ;lat2d := lat2d(JS:JE,IS:IE)
 ;lon2d := lon2d(JS:JE,IS:IE)
@@ -85,30 +80,21 @@ printVarSummary(lon2d)
   dim = dimsizes(lat2d)
  nlat = dim(0)
  nlon = dim(1)
-
- uuu2d!0     = "lat2d"
- uuu2d!1     = "lon2d"
- uuu2d@lat2d = lat2d
- uuu2d@lon2d = lon2d
- vvv2d!0     = "lat2d"
- vvv2d!1     = "lon2d"
- vvv2d@lat2d = lat2d
- vvv2d@lon2d = lon2d
- wsp2d!0     = "lat2d"
- wsp2d!1     = "lon2d"
- wsp2d@lat2d = lat2d
- wsp2d@lon2d = lon2d
+; 
+ tmp2d!0     = "lat2d"
+ tmp2d!1     = "lon2d"
+ tmp2d@lat2d = lat2d
+ tmp2d@lon2d = lon2d
 
 
- printMinMax(uuu2d,False)
- printMinMax(wsp2d,False)
+ printMinMax(tmp2d,False)
 
 ;====================================================================================
 
 
 
 
-;====================================================================================
+; ;====================================================================================
 ; Plot
 ;====================================================================================
 
@@ -116,8 +102,9 @@ printVarSummary(lon2d)
   type@wkWidth  = 800
   type@wkHeight = 800
 
-  wks = gsn_open_wks(type,"../out/rotate_uuu_ldps")
-  gsn_define_colormap(wks,"MPL_Blues")
+  wks = gsn_open_wks(type,"../out/rotate_ldps_temp")
+  gsn_define_colormap(wks,"OceanLakeLandSnow")
+ ; gsn_define_colormap(wks,"WhiteBlueGreenYellowRed")
 
   res = True
   res@vpWidthF  = 0.90
@@ -126,22 +113,16 @@ printVarSummary(lon2d)
   res@vpYF      = 0.950
   res@gsnDraw   = False
   res@gsnFrame  = False
-  res@tmXTOn = False
-  res@tmYROn = False
-  res@tmYLLabelFontHeightF = 0.01
 
 ;---- Draw Map
   res@mpOutlineBoundarySets         = "NoBoundaries"
-  res@tmXTOn = False
-  res@tmYROn = False
-  res@tmYLLabelFontHeightF = 0.01
 
 
 ;; somewhere in the model itself.
- res@mpProjection        = "LambertConformal"
- res@mpLambertParallel1F = 30
- res@mpLambertParallel2F = 60
- res@mpLambertMeridianF  = 126
+  res@mpProjection        = "LambertConformal"
+  res@mpLambertParallel1F = 30
+  res@mpLambertParallel2F = 60
+  res@mpLambertMeridianF  = 126.97
 
 ;; method of zooming in on map.
 ;  res@mpLimitMode         = "Corners"
@@ -152,10 +133,10 @@ printVarSummary(lon2d)
 ;  res@mpRightCornerLatF   = lat2d(nlat-1,nlon-1)
 ;  res@mpRightCornerLonF   = lon2d(nlat-1,nlon-1)
 
-  res@mpMinLatF  = lat2d(0,0)
-  res@mpMinLonF  = lon2d(0,0)
-  res@mpMaxLatF  = lat2d(nlat-1,nlon-1)
-  res@mpMaxLonF  = lon2d(nlat-1,nlon-1)
+  res@mpMinLatF  = lat2d(0,0) - 2
+  res@mpMinLonF  = lon2d(0,0) - 2
+  res@mpMaxLatF  = lat2d(nlat-1,nlon-1) + 2
+  res@mpMaxLonF  = lon2d(nlat-1,nlon-1) + 2
 
   print(lat2d(nlat-1,nlon-1) + 2)
   print(lon2d(nlat-1,nlon-1) + 2)
@@ -170,25 +151,25 @@ printVarSummary(lon2d)
 
 ;---- Draw latitude and longitude text label inside plot area
 
-  ;lat_txt        = ispan(10,50,10)
-  ;lon_txt        = ispan(50,190,10)
+  lat_txt        = ispan(10,50,10)
+  lon_txt        = ispan(50,190,10)
 
-  ;res@tmYRValues = lat_txt
-  ;res@tmYLValues = lat_txt
-  ;res@tmXTValues = lon_txt
-  ;res@tmXBValues = lon_txt
+  res@tmYRValues = lat_txt
+  res@tmYLValues = lat_txt
+  res@tmXTValues = lon_txt
+  res@tmXBValues = lon_txt
 
-  ;nyv = dimsizes(res@tmYRValues)
-  ;nxv = dimsizes(res@tmXTValues)
+  nyv = dimsizes(res@tmYRValues)
+  nxv = dimsizes(res@tmXTValues)
 
-  ;res@amOn = False
+  res@amOn = False
 
-  ;x              = new(nxv,float)
-  ;y              = new(nyv,float)
-  ;xlabels        = new(nxv,string)
-  ;ylabels        = new(nyv,string)
-  ;latlong_txt1   = new(nxv,graphic)
-  ;latlong_txt2   = new(nyv,graphic)
+  x              = new(nxv,float)
+  y              = new(nyv,float)
+  xlabels        = new(nxv,string)
+  ylabels        = new(nyv,string)
+  latlong_txt1   = new(nxv,graphic)
+  latlong_txt2   = new(nyv,graphic)
 
   ;plot = add_map_latlongTXT(wks,plot,res)   ;; function in kma_contributed.ncl
 
@@ -196,15 +177,15 @@ printVarSummary(lon2d)
 ;---- Draw orography
   res2 = res
 
-  res2@cnLinesOn            = False
+  res2@cnLinesOn            = True
   res2@cnLineLabelsOn       = False
   res2@cnInfoLabelOn        = False
   res2@cnFillOn             = True
 
 
   res2@cnLevelSelectionMode = "ManualLevels"        ; set manual contour levels
-  res2@cnMinLevelValF       = 0              ; set min contour level
-  res2@cnMaxLevelValF       = 20.                 ; set max contour level
+  res2@cnMinLevelValF       = 269              ; set min contour level
+  res2@cnMaxLevelValF       = 295                 ; set max contour level
   res2@cnLevelSpacingF      = 1.                    ; set contour spacing
 
 
@@ -222,7 +203,7 @@ printVarSummary(lon2d)
   res2@pmLabelBarOrthogonalPosF = 0.01
   res2@lbLabelFontHeightF       = 0.010
 
-  aki_plot1 = gsn_csm_contour(wks,uuu2d,res2)
+  aki_plot1 = gsn_csm_contour(wks,tmp2d,res2)
 
 
 

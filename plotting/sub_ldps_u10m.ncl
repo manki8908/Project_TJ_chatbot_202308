@@ -31,19 +31,15 @@ end setvalues
 
 ;---- Data path
   ;infile="/s4/home/nimr/mankicom/post/MODL/LDPS/N768/DABA/LDPS_STND_AGRD_FIXD"
-  in_dir="/home/ubuntu/ncl_test/dat/"
+  in_dir = "../dat/"
 
 
 ;---- Analysis area
+
    IS = 0
    IE = 621
    JS = 0
    JE = 809
-
-;   IS = 424
-;   IE = 430
-;   JS = 398
-;   JE = 404
 
 
 ;====================================================================================
@@ -66,11 +62,6 @@ wsp2d = wind_speed(uuu2d,vvv2d)
 lat2d = f->latitude     ; Needed only for projection information
 lon2d = f->longitude
 
-printVarSummary(uuu2d)
-printVarSummary(vvv2d)
-printVarSummary(wsp2d)
-printVarSummary(lat2d)
-printVarSummary(lon2d)
 
 
 ;lat2d := lat2d(JS:JE,IS:IE)
@@ -99,9 +90,33 @@ printVarSummary(lon2d)
  wsp2d@lat2d = lat2d
  wsp2d@lon2d = lon2d
 
+printVarSummary(uuu2d)
+printVarSummary(vvv2d)
+printVarSummary(wsp2d)
+printVarSummary(lat2d)
+printVarSummary(lon2d)
 
- printMinMax(uuu2d,False)
- printMinMax(wsp2d,False)
+printMinMax(uuu2d,False)
+printMinMax(vvv2d,False)
+printMinMax(wsp2d,False)
+
+
+; ---- mtn read load lat/lon
+
+lname = "mtn_load_ll_for_plt"
+
+lines  = asciiread (in_dir + lname, -1, "string")  ; -1 means read whole file
+;print(lines)                               ; echo input
+smtn_lat   = str_get_field(lines, 4, ",") 
+smtn_lon   = str_get_field(lines, 5, ",")
+mtn_lat   = stringtodouble(smtn_lat)                    ; _FillValue = 9.96921e+36
+mtn_lon   = stringtodouble(smtn_lon)                    ; _FillValue = 9.96921e+36
+
+;printVarSummary(mtn_lat)
+;printVarSummary(mtn_lon)
+;print(mtn_lat)
+;print(mtn_lon)
+;nums@_FillValue = -9999.0                  
 
 ;====================================================================================
 
@@ -116,8 +131,9 @@ printVarSummary(lon2d)
   type@wkWidth  = 800
   type@wkHeight = 800
 
-  wks = gsn_open_wks(type,"../out/rotate_uuu_ldps")
-  gsn_define_colormap(wks,"MPL_Blues")
+  wks = gsn_open_wks(type,"../out/sub_rotate_wsp_ldps")
+  ;gsn_define_colormap(wks,"MPL_Blues")
+  gsn_define_colormap(wks,"precip2_17lev")
 
   res = True
   res@vpWidthF  = 0.90
@@ -126,15 +142,9 @@ printVarSummary(lon2d)
   res@vpYF      = 0.950
   res@gsnDraw   = False
   res@gsnFrame  = False
-  res@tmXTOn = False
-  res@tmYROn = False
-  res@tmYLLabelFontHeightF = 0.01
 
 ;---- Draw Map
   res@mpOutlineBoundarySets         = "NoBoundaries"
-  res@tmXTOn = False
-  res@tmYROn = False
-  res@tmYLLabelFontHeightF = 0.01
 
 
 ;; somewhere in the model itself.
@@ -144,21 +154,26 @@ printVarSummary(lon2d)
  res@mpLambertMeridianF  = 126
 
 ;; method of zooming in on map.
-;  res@mpLimitMode         = "Corners"
   res@mpLimitMode         = "LatLon"
 
-;  res@mpLeftCornerLatF    = lat2d(0,0)
-;  res@mpLeftCornerLonF    = lon2d(0,0)
-;  res@mpRightCornerLatF   = lat2d(nlat-1,nlon-1)
-;  res@mpRightCornerLonF   = lon2d(nlat-1,nlon-1)
+  ;res@mpMinLatF  = lat2d(0,0) - 2
+  ;res@mpMinLonF  = lon2d(0,0) - 2
+  ;res@mpMaxLatF  = lat2d(nlat-1,nlon-1) + 2
+  ;res@mpMaxLonF  = lon2d(nlat-1,nlon-1) + 2
 
-  res@mpMinLatF  = lat2d(0,0)
-  res@mpMinLonF  = lon2d(0,0)
-  res@mpMaxLatF  = lat2d(nlat-1,nlon-1)
-  res@mpMaxLonF  = lon2d(nlat-1,nlon-1)
+  res@mpMinLatF  = 37.5
+  res@mpMinLonF  = 127.5
+  res@mpMaxLatF  = 39
+  res@mpMaxLonF  = 129.5
 
-  print(lat2d(nlat-1,nlon-1) + 2)
-  print(lon2d(nlat-1,nlon-1) + 2)
+  ;res@mpMinLatF  = 38.07
+  ;res@mpMinLonF  = 128.4
+  ;res@mpMaxLatF  = 38.17
+  ;res@mpMaxLonF  = 128.52
+
+
+  ;print(lat2d(nlat-1,nlon-1) + 2)
+  ;print(lon2d(nlat-1,nlon-1) + 2)
 
   res@tfDoNDCOverlay      = False    ; RDAPS ONLY!!!!!!!
   res@gsnAddCyclic        = False
@@ -166,34 +181,67 @@ printVarSummary(lon2d)
   plot = gsn_csm_map(wks,res) ;;;; MAP
 
 
+;---- Draw vector
+
+  ;cmap = read_colormap_file("BlAqGrYeOrReVi200")
+
+  vcres                     = True      ; plot mods desired
+  vcres@vcRefLengthF            = 0.050            ; ref vec length
+  vcres@vcGlyphStyle            = "CurlyVector"    ; turn on curly vectors
+  vcres@vcMinDistanceF          = 0.017            ; thin out vectors
+  vcres@vcVectorDrawOrder         = "PostDraw"
+  ;vcres@tiMainString            = "Vectors colored by a scalar map"
+  ;vcres@lbLabelStride       = 2         ; plot every other colar bar label
+  ;vcres@vcLevelPalette      = cmap(6:193,:)
+
+;;wind barb resources don't apply
+;;     vcres@vcGlyphStyle               = "WindBarb"
+;;     vcres@vcWindBarbLineThicknessF   = 5
+;;     vcres@vcWindBarbColor            = "Gray40"
+
+  ;---- set magnitude 
+  vcres@vcRefAnnoOn               = True
+  vcres@vcRefMagnitudeF           = 10 
+  vcres@vcRefAnnoString1          = "10"
+  vcres@vcRefAnnoSide             = "Top"
+  vcres@vcRefAnnoString2On        = False
+  vcres@vcRefAnnoPerimOn          = False
+  vcres@vcRefAnnoOrthogonalPosF   = -0.12
+  vcres@vcRefAnnoParallelPosF     = 0.999
+  vcres@vcRefAnnoBackgroundColor  = "yellow"
+  vcres@gsnRightString            = ""
+  vcres@gsnLeftString            = ""
+
+
+
 
 
 ;---- Draw latitude and longitude text label inside plot area
 
-  ;lat_txt        = ispan(10,50,10)
-  ;lon_txt        = ispan(50,190,10)
+  lat_txt        = ispan(10,50,10)
+  lon_txt        = ispan(50,190,10)
 
-  ;res@tmYRValues = lat_txt
-  ;res@tmYLValues = lat_txt
-  ;res@tmXTValues = lon_txt
-  ;res@tmXBValues = lon_txt
+  res@tmYRValues = lat_txt
+  res@tmYLValues = lat_txt
+  res@tmXTValues = lon_txt
+  res@tmXBValues = lon_txt
 
-  ;nyv = dimsizes(res@tmYRValues)
-  ;nxv = dimsizes(res@tmXTValues)
+  nyv = dimsizes(res@tmYRValues)
+  nxv = dimsizes(res@tmXTValues)
 
-  ;res@amOn = False
+  res@amOn = False
 
-  ;x              = new(nxv,float)
-  ;y              = new(nyv,float)
-  ;xlabels        = new(nxv,string)
-  ;ylabels        = new(nyv,string)
-  ;latlong_txt1   = new(nxv,graphic)
-  ;latlong_txt2   = new(nyv,graphic)
+  x              = new(nxv,float)
+  y              = new(nyv,float)
+  xlabels        = new(nxv,string)
+  ylabels        = new(nyv,string)
+  latlong_txt1   = new(nxv,graphic)
+  latlong_txt2   = new(nyv,graphic)
 
-  ;plot = add_map_latlongTXT(wks,plot,res)   ;; function in kma_contributed.ncl
+  lltxt_plot = add_map_latlongTXT(wks,plot,res)   ;; function in kma_contributed.ncl
 
 
-;---- Draw orography
+;---- Draw wind
   res2 = res
 
   res2@cnLinesOn            = False
@@ -204,8 +252,8 @@ printVarSummary(lon2d)
 
   res2@cnLevelSelectionMode = "ManualLevels"        ; set manual contour levels
   res2@cnMinLevelValF       = 0              ; set min contour level
-  res2@cnMaxLevelValF       = 20.                 ; set max contour level
-  res2@cnLevelSpacingF      = 1.                    ; set contour spacing
+  res2@cnMaxLevelValF       = 18.                 ; set max contour level
+  res2@cnLevelSpacingF      = 1                    ; set contour spacing
 
 
 ;  res2@cnLevelSelectionMode  = "ExplicitLevels"
@@ -222,8 +270,18 @@ printVarSummary(lon2d)
   res2@pmLabelBarOrthogonalPosF = 0.01
   res2@lbLabelFontHeightF       = 0.010
 
-  aki_plot1 = gsn_csm_contour(wks,uuu2d,res2)
 
+
+;---- Attach the polyline
+  pres                  = True           ; polyline mods desired
+  pres@gsLineThicknessF = 4.0            ; line thickness   
+  pres@gsLineColor      = "blue"         ; color of lines
+
+  ;n_mll = dimsizes(mtn_lat)
+  ;do n = 0, dimsizes(mtn_lat)-2
+  ;  dum1 = gsn_add_polyline(wks,plot, (/mtn_lon(n), mtn_lon(n+1)/) , (/mtn_lat(n), mtn_lat(n+1)/) ,pres)
+  ;end do
+  dum1 = gsn_add_polyline(wks,plot, (/mtn_lon/) , (/mtn_lat/) ,pres)
 
 
 
@@ -301,7 +359,11 @@ printVarSummary(lon2d)
 
   end do
 
+  aki_plot1 = gsn_csm_contour(wks,wsp2d,res2)
+  plot_v=gsn_csm_vector(wks,uuu2d,vvv2d,vcres)  ; create plot
+
   overlay(plot,aki_plot1)
+  overlay(plot,plot_v)
 
   draw(plot)   ; This will draw attached polylines and map
   frame(wks)   ; Advanced frame.

@@ -30,21 +30,14 @@ end setvalues
   SHH = str_get_cols(ANLTIM,8,9)
 
 ;---- Data path
-  ;infile="/s4/home/nimr/mankicom/post/MODL/LDPS/N768/DABA/LDPS_STND_AGRD_FIXD"
-  in_dir="/home/ubuntu/ncl_test/dat/"
+  filen = "uv_OA_field_test" 
+  indir = "../dat/"
+  infile= indir+filen
 
 
 ;---- Analysis area
-   IS = 0
-   IE = 621
-   JS = 0
-   JE = 809
-
-;   IS = 424
-;   IE = 430
-;   JS = 398
-;   JE = 404
-
+   nx = 400
+   ny = 400
 
 ;====================================================================================
 
@@ -56,35 +49,37 @@ end setvalues
 ; Read Data
 ;====================================================================================
 
-fname = "l015_v070_erlo_unis_20kind.2023041000.nc"
-f     = addfile (in_dir + fname, "r")
-print(f)
 
-uuu2d = f->UGRD_10maboveground(0,:,:)
-vvv2d = f->VGRD_10maboveground(0,:,:)
+ nln = numAsciiRow(infile)
+data = new((/nln,6/),"float")
+
+ data=readAsciiTable(infile,6,"float",0)
+
+lat = data(:,2)
+lon = data(:,3)
+uuu = data(:,4)
+vvv = data(:,5)
+
+
+lat2d = onedtond(lat,(/ny,nx/))
+lon2d = onedtond(lon,(/ny,nx/))
+uuu2d = onedtond(uuu,(/ny,nx/))
+vvv2d = onedtond(vvv,(/ny,nx/))
 wsp2d = wind_speed(uuu2d,vvv2d)
-lat2d = f->latitude     ; Needed only for projection information
-lon2d = f->longitude
 
-printVarSummary(uuu2d)
-printVarSummary(vvv2d)
-printVarSummary(wsp2d)
-printVarSummary(lat2d)
-printVarSummary(lon2d)
+lon2d@units      = "degree_east"
+lon2d@long_name  = "LONGITUDE"
+lon2d@_FillValue = -99999.0
 
+lat2d@units      = "dgree_north"
+lat2d@long_name  = "LATITUDE"
+lat2d@_FillValue = -99999.0
 
-;lat2d := lat2d(JS:JE,IS:IE)
-;lon2d := lon2d(JS:JE,IS:IE)
-;tmp2d := tmp2d(JS:JE,IS:IE)
-
-;loc1= wrf_latlon_to_ij(lat2d,lon2d,37.62796,128.6446)
-;loc2= wrf_latlon_to_ij(lat2d,lon2d,37.70748,128.7487)
-;print(loc1)
-;print(loc2)
 
   dim = dimsizes(lat2d)
  nlat = dim(0)
  nlon = dim(1)
+
 
  uuu2d!0     = "lat2d"
  uuu2d!1     = "lon2d"
@@ -99,9 +94,15 @@ printVarSummary(lon2d)
  wsp2d@lat2d = lat2d
  wsp2d@lon2d = lon2d
 
+printVarSummary(uuu2d)
+printVarSummary(vvv2d)
+printVarSummary(wsp2d)
+printVarSummary(lat2d)
+printVarSummary(lon2d)
 
- printMinMax(uuu2d,False)
- printMinMax(wsp2d,False)
+printMinMax(uuu2d,False)
+printMinMax(vvv2d,False)
+printMinMax(wsp2d,False)
 
 ;====================================================================================
 
@@ -116,8 +117,9 @@ printVarSummary(lon2d)
   type@wkWidth  = 800
   type@wkHeight = 800
 
-  wks = gsn_open_wks(type,"../out/rotate_uuu_ldps")
+  wks = gsn_open_wks(type,"../out/sub_rotate_wsp_oa")
   gsn_define_colormap(wks,"MPL_Blues")
+  ;gsn_define_colormap(wks,"WhiteBlueGreenYellowRed")
 
   res = True
   res@vpWidthF  = 0.90
@@ -126,15 +128,9 @@ printVarSummary(lon2d)
   res@vpYF      = 0.950
   res@gsnDraw   = False
   res@gsnFrame  = False
-  res@tmXTOn = False
-  res@tmYROn = False
-  res@tmYLLabelFontHeightF = 0.01
 
 ;---- Draw Map
   res@mpOutlineBoundarySets         = "NoBoundaries"
-  res@tmXTOn = False
-  res@tmYROn = False
-  res@tmYLLabelFontHeightF = 0.01
 
 
 ;; somewhere in the model itself.
@@ -144,24 +140,25 @@ printVarSummary(lon2d)
  res@mpLambertMeridianF  = 126
 
 ;; method of zooming in on map.
-;  res@mpLimitMode         = "Corners"
   res@mpLimitMode         = "LatLon"
 
-;  res@mpLeftCornerLatF    = lat2d(0,0)
-;  res@mpLeftCornerLonF    = lon2d(0,0)
-;  res@mpRightCornerLatF   = lat2d(nlat-1,nlon-1)
-;  res@mpRightCornerLonF   = lon2d(nlat-1,nlon-1)
+  ;res@mpMinLatF  = lat2d(0,0) - 2
+  ;res@mpMinLonF  = lon2d(0,0) - 2
+  ;res@mpMaxLatF  = lat2d(nlat-1,nlon-1) + 2
+  ;res@mpMaxLonF  = lon2d(nlat-1,nlon-1) + 2
 
-  res@mpMinLatF  = lat2d(0,0)
-  res@mpMinLonF  = lon2d(0,0)
-  res@mpMaxLatF  = lat2d(nlat-1,nlon-1)
-  res@mpMaxLonF  = lon2d(nlat-1,nlon-1)
+  res@mpMinLatF  = 37
+  res@mpMinLonF  = 127
+  res@mpMaxLatF  = 39
+  res@mpMaxLonF  = 129
 
   print(lat2d(nlat-1,nlon-1) + 2)
   print(lon2d(nlat-1,nlon-1) + 2)
 
   res@tfDoNDCOverlay      = False    ; RDAPS ONLY!!!!!!!
   res@gsnAddCyclic        = False
+
+  ;res@gsnMaskLambertConformal = True            ; turn on lc masking
 
   plot = gsn_csm_map(wks,res) ;;;; MAP
 
@@ -170,25 +167,25 @@ printVarSummary(lon2d)
 
 ;---- Draw latitude and longitude text label inside plot area
 
-  ;lat_txt        = ispan(10,50,10)
-  ;lon_txt        = ispan(50,190,10)
+  lat_txt        = ispan(10,50,10)
+  lon_txt        = ispan(50,190,10)
 
-  ;res@tmYRValues = lat_txt
-  ;res@tmYLValues = lat_txt
-  ;res@tmXTValues = lon_txt
-  ;res@tmXBValues = lon_txt
+  res@tmYRValues = lat_txt
+  res@tmYLValues = lat_txt
+  res@tmXTValues = lon_txt
+  res@tmXBValues = lon_txt
 
-  ;nyv = dimsizes(res@tmYRValues)
-  ;nxv = dimsizes(res@tmXTValues)
+  nyv = dimsizes(res@tmYRValues)
+  nxv = dimsizes(res@tmXTValues)
 
-  ;res@amOn = False
+  res@amOn = False
 
-  ;x              = new(nxv,float)
-  ;y              = new(nyv,float)
-  ;xlabels        = new(nxv,string)
-  ;ylabels        = new(nyv,string)
-  ;latlong_txt1   = new(nxv,graphic)
-  ;latlong_txt2   = new(nyv,graphic)
+  x              = new(nxv,float)
+  y              = new(nyv,float)
+  xlabels        = new(nxv,string)
+  ylabels        = new(nyv,string)
+  latlong_txt1   = new(nxv,graphic)
+  latlong_txt2   = new(nyv,graphic)
 
   ;plot = add_map_latlongTXT(wks,plot,res)   ;; function in kma_contributed.ncl
 
@@ -222,7 +219,7 @@ printVarSummary(lon2d)
   res2@pmLabelBarOrthogonalPosF = 0.01
   res2@lbLabelFontHeightF       = 0.010
 
-  aki_plot1 = gsn_csm_contour(wks,uuu2d,res2)
+  aki_plot1 = gsn_csm_contour(wks,wsp2d,res2)
 
 
 
