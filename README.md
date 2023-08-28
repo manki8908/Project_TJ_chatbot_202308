@@ -1,5 +1,3 @@
-# AWS: 3.34.18.184:/home/ubuntu/projects/prj_mtn
-
 # prj_mountain
 ### 자연어 처리에서 사전이 필요한 이유
 ### 의도모델 전처리, ner모델 전처리 정리
