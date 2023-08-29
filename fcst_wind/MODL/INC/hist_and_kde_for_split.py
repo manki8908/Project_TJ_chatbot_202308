@@ -17,7 +17,8 @@ from plot_kde import plot_kde_tran_vald_test, plot_kde, plot_kde_tran_vald
 
 
 
-def hist_and_kde_for_split_UV(exp_name, tran_peri, run_stn_id, prt_outdir, tran_y, vald_y, test_y):
+#def hist_and_kde_for_split_UV(exp_name, tran_peri, run_stn_id, prt_outdir, tran_y, vald_y, test_y):
+def hist_and_kde_for_split_UV(exp_name, tran_peri, run_stn_id, prt_outdir, tran_x, vald_x, test_x, tran_y, vald_y, test_y):
 
     print("plotting KDE .. " )
     print("tran_y shape: ", tran_y.shape)
@@ -26,6 +27,11 @@ def hist_and_kde_for_split_UV(exp_name, tran_peri, run_stn_id, prt_outdir, tran_
 
 
     # .. kde
+    save_out_name = prt_outdir + "KDE_ecmw_tran_vald_nwp_uuu" + tran_peri + "_" + str(run_stn_id)
+    plot_kde_tran_vald_test("TRAN_NWP", "VALD_NWP", "TEST_NWP", tran_x[:,:,0:1], vald_x[:,:,0:1], test_x[:,:,0:1], run_stn_id, tran_peri, save_out_name)
+    save_out_name = prt_outdir + "KDE_ecmw_tran_vald_nwp_vvv" + tran_peri + "_" + str(run_stn_id)
+    plot_kde_tran_vald_test("TRAN_NWP", "VALD_NWP", "TEST_NWP", tran_x[:,:,1:2], vald_x[:,:,1:2], test_x[:,:,1:2], run_stn_id, tran_peri, save_out_name)
+
     save_out_name = prt_outdir + "KDE_ecmw_tran_vald_obs_uuu" + tran_peri + "_" + str(run_stn_id)
     plot_kde_tran_vald_test("TRAN_OBS", "VALD_OBS", "TEST_OBS", tran_y[:,:,0:1], vald_y[:,:,0:1], test_y[:,:,0:1], run_stn_id, tran_peri, save_out_name)
     save_out_name = prt_outdir + "KDE_ecmw_tran_vald_obs_vvv" + tran_peri + "_" + str(run_stn_id)

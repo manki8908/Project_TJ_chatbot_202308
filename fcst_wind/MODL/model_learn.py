@@ -10,9 +10,11 @@ sys.path.insert(0, './INC/')
 from data_split import data_split
 
 
+dev_stn_id = 875
+
 # 인풋 준비
-nwp_file = "../DAIO/nwp_data_47105"
-obs_file = "../DAIO/obs_data_47105"
+nwp_file = f"../DAIO/nwp_data_{dev_stn_id}"
+obs_file = f"../DAIO/obs_data_{dev_stn_id}"
 nwp_data = np.load(nwp_file)
 obs_data = np.load(obs_file)
 print("="*50, "load data shape")
@@ -54,7 +56,10 @@ print(dm_obs_test.shape)
 
 
 # 변수선택
-sel_var = ['NDNSW_surface', 'UGRD_10m', 'VGRD_10m', 'RH_1_5ma', 'MAXGUST_0m', 'PRMSL_meansealevel']
+# for 47105
+#sel_var = ['NDNSW_surface', 'UGRD_10m', 'VGRD_10m', 'RH_1_5ma', 'MAXGUST_0m', 'PRMSL_meansealevel']
+# for 875
+sel_var = ['UGRD_10m', 'VGRD_10m', "TMP_1_5m", 'RH_1_5ma', 'PRMSL_meansealevel', "PRES_surface"]
 var_list_dict = list(variable_info.keys())
 var_index = [ var_list_dict.index(i) for i in sel_var ]
 #print(var_list_dict)
@@ -164,7 +169,7 @@ hp_ns = 1
 hp_dl = [1,2,4]
 hp_ldl = hp_dl[-1] # last dilation factor to make name of save model
 hp_bn = True
-hp_nf = 85
+hp_nf = 100
 hp_dr = 0.07
 hp_ks = 3
 
@@ -173,11 +178,12 @@ output_size = 2
 num_fct = 48
 batch_size = 8
 num_epoch = 1000
-dev_stn_id = 47105
+
 tran_data_per = "2101_2104_2201_2204"
 
 
 exp_name = "CNTL"
+
 csv_outdir = './DAOU/LOSS/' + exp_name + '/'
 model_outdir = './DAOU/MODL/' + exp_name + '/'
 scalr_outdir = './DAOU/SCAL/' + exp_name + '/'
