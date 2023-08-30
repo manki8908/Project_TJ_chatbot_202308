@@ -59,6 +59,9 @@ EMB_SIZE = 128
 EPOCH = 5
 VOCAB_SIZE = len(p.word_index) + 1 #전체 단어 개수
 
+print("VOCAB_SIZE", VOCAB_SIZE)
+print("EMB_SIZE", EMB_SIZE)
+
 
 # CNN 모델 정의  ○4
 input_layer = Input(shape=(MAX_SEQ_LEN,))
@@ -113,4 +116,4 @@ print('loss: %f' % (loss))
 
 
 # 모델 저장  ○8
-model.save('intent_model_use_mtndat_mtndic.h5')
+#model.save('intent_model_use_mtndat_mtndic.h5')
