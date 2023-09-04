@@ -57,17 +57,28 @@
   * <img src="./githun_figure/자료분할.PNG">
   * TCN 기반 편차보정 구도 설정
   * <img src="./githun_figure/TCN기반_편차보정모델.PNG">
-  * Hyper-parameter 최적화(Bayesian Optimization VS HyperBand)
+  * Hyper-parameter 최적화: Bayesian Optimization VS HyperBand
   * <img src="./githun_figure/최적화결과.PNG">
-* 보정결과
+* 편차보정모델 보정 전,후 검증
   * <img src="./githun_figure/보정전후_바람장미.PNG">
 
+<br><br>
 
 ## 챗봇 시스템
 * 카카오톡 오픈빌더의 풀백 블록을 이용해 사용자가 발화한 서비스 조회내용을 챗봇서버(API --> engien --> DB)로 전달하여 응답리턴
 <p align="center">
   <img src="./githun_figure/서비스시스템.PNG">
-  <b>3단계 서비스 구성</b><br><br>
+  <b>챗봇 시스템 응답과정</b><br><br>
 </p>
+
 * 챗봇모델 개발과정
-  * 
+  * 말뭉치 훈련자료
+  * <img src="./githun_figure/말뭉치훈련자료.png">
+  * 등산로 자료
+  * <img src="./githun_figure/등산로자료.png">
+  * 의도분류 모델
+  * <img src="./githun_figure/의도분류.png">
+  * 개체명인식 모델
+  * <img src="./githun_figure/개체명인식모델.png">
+  * 검증
+  * <img src="./githun_figure/개체명인식모델 검증.png">
