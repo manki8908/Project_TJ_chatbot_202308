@@ -1,4 +1,4 @@
-# Hiking wind-alarm 서비스 개발 PDF[link](./githun_figure/프로젝트2_20230830_김만기(final).pdf)
+# Hiking wind-alarm 서비스 개발 [PDF](./githun_figure/프로젝트2_20230830_김만기(final).pdf)
 
 
 ① 소개
