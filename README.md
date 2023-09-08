@@ -42,14 +42,14 @@
 * 등산로  조회
   * 등산로 DB에서 일치하는 등산로 정보를 지도에 표시
 <p align="center">
-  <img src="./githun_figure/챗봇응답1.PNG">
+  <img src="./githun_figure/챗봇응답1.png">
   <b></b><br><br>
 </p>
 
 * 등산시작 시각 입력
   * 등산시작 시각으로부터 앞으로 예상되는 위험바람 구간을 알림(미완성)
 <p align="center">
-  <img src="./githun_figure/챗봇응답2.PNG">
+  <img src="./githun_figure/챗봇응답2.png">
   <b></b><br><br>
 </p>
 
